@@ -45,7 +45,7 @@ public class ViewViewHandler {
                 view.setBookId(rented.getBookId());
                 view.setRegDate(rented.getRentalDate());
                 view.setRentalFee(rented.getRentalFee());
-                view.setRentalStaus(rented.getRentalStatus());
+                view.setRentalStaus("RENTED");
                 // view 레파지 토리에 save
                 viewRepository.save(view);
             }
@@ -73,12 +73,14 @@ public class ViewViewHandler {
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whenReturned_then_UPDATE_(@Payload Returned returned) {
+        System.out.println("##### whenReturned_then_UPDATE_!! Id: " + returned.getId());
         try {
             if (returned.isMe()) {
                 // view 객체 조회
                 List<View> viewList = viewRepository.findByRentalId(returned.getId());
                 for(View view : viewList){
                     // view 객체에 이벤트의 eventDirectValue 를 set 함
+                    view.setRentalStaus("RETURNED");
                     view.setReturnDate(returned.getReturnDate());
                     // view 레파지 토리에 save
                     viewRepository.save(view);
@@ -90,7 +92,31 @@ public class ViewViewHandler {
     }
 
     @StreamListener(KafkaProcessor.INPUT)
+    public void whenCancelled_then_UPDATE_(@Payload Cancelled cancelled) {
+
+        System.out.println("##### whenCancelled_then_UPDATE_!! Id: " + cancelled.getId());
+        try {
+            if (cancelled.isMe()) {
+                // view 객체 조회
+                List<View> viewList = viewRepository.findByRentalId(cancelled.getId());
+                for(View view : viewList){
+                    // view 객체에 이벤트의 eventDirectValue 를 set 함
+                    view.setRentalStaus("CANCELLED");
+                    view.setReturnDate(cancelled.getReturnDate());
+                    // view 레파지 토리에 save
+                    viewRepository.save(view);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /*
+        @StreamListener(KafkaProcessor.INPUT)
     public void whenCancelled_then_DELETE_(@Payload Cancelled cancelled) {
+
+        System.out.println("##### whenCancelled_then_DELETE_!! Id: " + cancelled.getId());
         try {
             if (cancelled.isMe()) {
                 // view 레파지 토리에 삭제 쿼리
@@ -100,4 +126,5 @@ public class ViewViewHandler {
             e.printStackTrace();
         }
     }
+     */
 }
