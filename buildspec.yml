@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    _PROJECT_NAME: "teamb-view"
+    _PROJECT_NAME: "admin04-view"
 
 phases:
   install:
