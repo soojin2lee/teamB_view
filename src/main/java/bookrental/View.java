@@ -20,9 +20,17 @@ public class View {
         private String rentalStaus;
         private String userName;
         private Date returnDate;
+        private Integer point;
 
+    public Integer getPoint() {
+        return point;
+    }
 
-        public Long getId() {
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public Long getId() {
             return id;
         }
 

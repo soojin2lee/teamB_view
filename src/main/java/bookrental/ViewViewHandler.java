@@ -70,6 +70,42 @@ public class ViewViewHandler {
         }
     }
 
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenPointSaved_then_CREATE_ (@Payload Saved saved) {
+        try {
+            if (saved.isMe()) {
+                // view 객체 생성
+                View view = new View();
+                // view 객체에 이벤트의 Value 를 set 함
+                view.setUseId(saved.getUserId());
+                view.setPoint(saved.getUserTotalPoint());
+                view.setRegDate(saved.getChgDate());
+                // view 레파지 토리에 save
+                viewRepository.save(view);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenPointUsed_then_CREATE_ (@Payload Used used) {
+        try {
+            if (used.isMe()) {
+                // view 객체 생성
+                View view = new View();
+                // view 객체에 이벤트의 Value 를 set 함
+                view.setUseId(used.getUserId());
+                view.setPoint(used.getUserTotalPoint());
+                view.setRegDate(used.getChgDate());
+                // view 레파지 토리에 save
+                viewRepository.save(view);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whenReturned_then_UPDATE_(@Payload Returned returned) {
@@ -111,6 +147,7 @@ public class ViewViewHandler {
             e.printStackTrace();
         }
     }
+
 
     /*
         @StreamListener(KafkaProcessor.INPUT)

@@ -8,6 +8,5 @@ import java.util.List;
 public interface ViewRepository extends CrudRepository<View, Long> {
 
     List<View> findByRentalId(Long rentalId);
-
         void deleteByRentalId(Long rentalId);
 }
